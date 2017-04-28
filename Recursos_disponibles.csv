@@ -1,0 +1,5 @@
+Recurso;Cantidad;Capacidad;Estado;crearCola;permiteMezclarSabores
+Batidora;1;3;Libre;TRUE;FALSE
+Persona;2;3;Libre;FALSE;TRUE
+Bandeja;2;1;Libre;FALSE;FALSE
+Horno;1;1;Libre;FALSE;FALSE

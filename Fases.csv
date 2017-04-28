@@ -1,0 +1,14 @@
+Fase;Tipo;Tiempo_proceso;Siguiente_fase
+Inicial;;0;Mezclar
+Mezclar;Accion;6;Almacen_masa
+Almacen_masa;Almacen;0;Colocar_masa
+Colocar_masa;Accion;2;Almacen_bandeja_prehorno
+Almacen_bandeja_prehorno;Almacen;0;PrepararHorno
+PrepararHorno;Accion;1;Hornear
+Hornear;Accion;9;Enfriar
+Enfriar;Accion;5;Almacen_bandeja_cocinada
+Almacen_bandeja_cocinada;Almacen;0;Empaquetar
+Empaquetar;Accion;2;Almacen_cookies_empaquetadas
+Almacen_cookies_empaquetadas;Almacen;0;Cobrar
+Cobrar;Accion;1;Final
+Final;;0;Final
