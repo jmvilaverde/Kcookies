@@ -50,11 +50,7 @@ controller.ejecuta_paso <- function(paso, idSimulacion, debug = FALSE){
               
               #20170428 Modificación para pasar a fase final solo si ha llegado a la hora de la recogida
               #if(tiempo_proceso_fase <= tiempo_proceso_pedido){
-              if((tiempo_proceso_fase <= tiempo_proceso_pedido) 
-                 & (siguiente_fase_pedido != "Cobrar" 
-                     | (siguiente_fase_pedido == "Cobrar" & pedidos_de_la_fase[i,]$hora_recogida <= minutos_to_horas(hora_inicio+paso))
-                    )
-                 )
+              if(tiempo_proceso_fase <= tiempo_proceso_pedido)
               {
                 
                 #Obtenemos la que sería la siguiente fase
@@ -84,7 +80,11 @@ controller.ejecuta_paso <- function(paso, idSimulacion, debug = FALSE){
                 }
                 
                 print(paste(indicePedido," - Hay recursos disponibles:",hayRecursosDisponibles))
-                if(hayRecursosDisponibles | siguiente_fase_pedido == "Final"){
+                
+                #Modificamos para que no pase a fase Cobrar si no se puede
+                #if(hayRecursosDisponibles | siguiente_fase_pedido == "Final")
+                if((hayRecursosDisponibles & siguiente_fase_pedido != "Cobrar") | siguiente_fase_pedido == "Final" | 
+                  (siguiente_fase_pedido == "Cobrar" & pedidos_de_la_fase[i,]$hora_recogida <= minutos_to_horas(hora_inicio+paso))){
                   
                   #Liberar los recursos usados
                   print(paste("Indice pedido:", indicePedido, sep=" "))

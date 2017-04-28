@@ -109,6 +109,7 @@ recursos.getRecursosPorTipoLibres <- function(recurso, pedido){
 recursos.checkDisponibles <- function(fase, pedido){
   
   #Si va a pasar a la fase de Cobrar comprobamos primero que sea ya la hora de cobrar el pedido
+  print(paste("fase: ", fase,", hora_recogida: ",pedidos[pedido,]$hora_recogida, ", hora_actual:", minutos_to_horas(hora_inicio+paso)))
   if(fase == "Cobrar" & pedidos[pedido,]$hora_recogida > minutos_to_horas(hora_inicio+paso)) return(FALSE)
   
   #Si está en la fase Final directamente devolvemos que hay recursos para que termine
