@@ -130,19 +130,26 @@ pedidos.incrementarPaso <- function(){
   for(i in 1:nrow(pedidos)){
     pedido <- pedidos[i,]
     fase <- flujo_estados[flujo_estados$Fase == pedido$fase,]
-    #Si se ha superado el tiempo de procesamiento de la fase lo metemos en tiempo_espera
-    if(pedido$tiempo_procesamiento_fase >= fase$Tiempo_proceso){
-      pedido$tiempo_espera <- pedido$tiempo_espera + 1
-    } else {
-        pedido$tiempo_procesamiento_fase <- pedido$tiempo_procesamiento_fase + 1
-      if(fase$Tipo != "Almacen"){ 
-        pedido$tiempo_atendido <- pedido$tiempo_atendido + 1
-      }
-    }
     
-    #Si está en un almacen incrementamos el tiempo en almacen
-    if(fase$Tipo == "Almacen"){ pedido$tiempo_almacen <- pedido$tiempo_almacen + 1 }    
-    pedidos[i,] <- pedido
+    #Se salta si es un paso Final
+    if(fase != "Final"){
+      
+      #Si se ha superado el tiempo de procesamiento de la fase lo metemos en tiempo_espera
+      if(pedido$tiempo_procesamiento_fase >= fase$Tiempo_proceso){
+        pedido$tiempo_espera <- pedido$tiempo_espera + 1
+      } else {
+        pedido$tiempo_procesamiento_fase <- pedido$tiempo_procesamiento_fase + 1
+        if(fase$Tipo != "Almacen"){ 
+          pedido$tiempo_atendido <- pedido$tiempo_atendido + 1
+        }
+      }
+      
+      #Si está en un almacen incrementamos el tiempo en almacen
+      if(fase$Tipo == "Almacen"){ pedido$tiempo_almacen <- pedido$tiempo_almacen + 1 }    
+      pedidos[i,] <- pedido  
+      
+    }
+
   }
   
   return(pedidos)

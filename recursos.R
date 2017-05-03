@@ -119,7 +119,13 @@ recursos.checkDisponibles <- function(fase, pedido){
   # print("--------------------------------------------------------------------------------------------")
   # print(paste("Debug recursos.checkDisponibles - comprobacion disponibles:",fase,pedido, sep=" "))
   #print(paste("Recursos_necesarios_fase", length(recursos_necesarios_fase), sep=""))
+  
+  #Si no son necesarios recursos entonces se tienen todos los recursos necesarios
+  if(length(recursos_necesarios_fase) == 0) return (TRUE)
+  
   for(i in 1:length(recursos_necesarios_fase)){
+    print(paste("Recursos necesarios para la fase:",recursos_necesarios_fase[i] ))
+    print(paste("Pedido: ", pedido))
     recursos_libres <- recursos.getRecursosPorTipoLibres(recursos_necesarios_fase[i], pedido)
     #Si no hay recursos libres de algún tipo te devuelve FALSE
     # print(paste("Numero filas de recurso",recursos_necesarios_fase[i],":",nrow(recursos_libres),sep=" "))
@@ -168,6 +174,10 @@ recursos.ocupar <- function(pedido){
   fase <- pedido$fase
   fase_anterior <- fases.getFaseAnterior(fase)$Fase
   recursos_necesarios_fase <- recursos.getRequeridosParaFase(fase)
+  
+  #Si no hay recursos no es necesario ocupar
+  #Devolvemos los mismos recursos que ya existen
+  if(length(recursos_necesarios_fase)==0) return(recursos)
   
   #Obtenemos el máximo de docenas de cookies procesables en la fase
   # !!! Desactivamos de momento el máximo procesable
