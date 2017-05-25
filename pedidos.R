@@ -2,23 +2,32 @@ random_sabor <- function(sabores){
   return(sabores[as.integer(runif(1,0,length(sabores))) + 1])
 }
 
-pedido.randomGeneratorPedidos <- function(hora_pedido){
+pedido.randomGeneratorPedidos <- function(hora_pedido, flujoPedidos, pedidosPorPaso){
   
   #Dejamos para más adelante el cambiar la función random según la franja horaria
   #numeroPedidos <- pedido.getRandomNumeroPedidos(hora = hora_pedido, pedidos_por_turno = 10, minutos_por_turno = 240)
   
-  #Dejamos fijo el número de pedidos a 1, si hay menos de 2 pedidos en el listado
-  numeroPedidos <- pedido.getRandomNumeroPedidos(pedidos_por_turno = 10, minutos_por_turno = contador.getMinutosTurno())
-  # if (!exists("pedidos")) {
-  #   numeroPedidos <- 1  
-  # }
-  # else {
-  #   if(nrow(pedidos)<2){
-  #     numeroPedidos <- 1
-  #   } else {
-  #     numeroPedidos <- 0
-  #   }
-  # }
+  if(flujoPedidos=="Poisson")
+  { #Dejamos fijo el número de pedidos a 1, si hay menos de 2 pedidos en el listado
+    numeroPedidos <- pedido.getRandomNumeroPedidos(pedidos_por_turno = 10, minutos_por_turno = contador.getMinutosTurno())
+    
+    # if (!exists("pedidos")) {
+    #   numeroPedidos <- 1  
+    # }
+    # else {
+    #   if(nrow(pedidos)<2){
+    #     numeroPedidos <- 1
+    #   } else {
+    #     numeroPedidos <- 0
+    #   }
+    # }
+  }
+  else { #Flujo constante de pedidos de 1 en 1
+    if(flujoPedidos=="Constante"){
+      if (paso%%(1/pedidosPorPaso)==0) numeroPedidos <- ceiling(pedidosPorPaso)
+      else numeroPedidos <- 0
+    }
+  }
   
   if(numeroPedidos>0){
     for(i in 1:numeroPedidos){
@@ -173,3 +182,20 @@ pedidos.guardarHistorico <- function(marcaTiempo, simulacion = 1){
 pedidos.retirarFinalizados <- function(marcaTiempo){
   return(pedidos[pedidos$fase!="Final", ])
 }
+
+pedidos.saveHistorico2XLSX <- function(){
+  install.packages("xlsx")
+  library("xlsx")
+  write.xlsx(historicoPedidos, "historicoPedidos.xlsx", sheetName="Sheet1")
+}
+
+pedidos.transform <- function(){
+  
+  library(reshape)
+  auxPedido <- historicoPedidos[, c("idPedido", "marcaTiempo", "fase")]
+  auxPedido2 <- cast(auxPedido, idPedido~marcaTiempo)
+  View(auxPedido2)
+
+}
+
+

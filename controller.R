@@ -12,13 +12,13 @@ controller.init <- function(h_inicio, h_fin){
   
 }
 
-controller.ejecuta_paso <- function(paso, idSimulacion, debug = FALSE){
+controller.ejecuta_paso <- function(paso, idSimulacion, debug = FALSE, flujoPedidos, pedidosPorPaso){
   
   #Inicializo la variable global de paso
   paso <<- paso
   
   #Genera pedidos en el paso y agrega a la lista de pedidos
-  pedido.randomGeneratorPedidos(minutos_to_horas(paso))
+  pedido.randomGeneratorPedidos(minutos_to_horas(paso), flujoPedidos, pedidosPorPaso)
   
   #Coje siguiente pedido de la lista de pedidos
   if(exists("pedidos")){
@@ -149,7 +149,7 @@ controller.ejecuta_paso <- function(paso, idSimulacion, debug = FALSE){
 
 
 
-controller.simulate <- function(simulaciones = 1, debug = TRUE, h_inicio="20:00", h_fin="21:00"){
+controller.simulate <- function(simulaciones = 1, debug = TRUE, h_inicio="20:00", h_fin="21:00", flujoPedidos="Poisson", pedidosPorPaso=0){
   
   controller.init(h_inicio, h_fin)
   
@@ -163,9 +163,9 @@ controller.simulate <- function(simulaciones = 1, debug = TRUE, h_inicio="20:00"
     recursos.init()
     
     for(i in 1:num_pasos){
-      print(paste("Progreso:",i/num_pasos,"%"))
+      print(paste("Progreso:",ceilling(i/num_pasos*100),"%"))
       print(minutos_to_horas(hora_inicio+i))
-      controller.ejecuta_paso(i, simulacion, debug = debug)
+      controller.ejecuta_paso(i, simulacion, debug = debug, flujoPedidos = flujoPedidos, pedidosPorPaso = pedidosPorPaso)
     }  
   
     #Eliminamos los pedidos
@@ -173,6 +173,12 @@ controller.simulate <- function(simulaciones = 1, debug = TRUE, h_inicio="20:00"
     #Eliminamos los recursos
     recursos.limpiar()
   }
+  
+  #Guardar en xlsx los datos
+  #pedidos.saveHistorico2XLSX()
+  
+  #Transformación del pedido y visualización
+  pedidos.transform()
   
     return(1)  
 }

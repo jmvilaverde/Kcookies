@@ -1,4 +1,8 @@
 Fase;Recurso;Ocupado_Siguiente_Fase
+Limpiar;Batidora;TRUE
+Limpiar;Persona;FALSE
+Añadir;Batidora;TRUE
+Añadir;Persona;FALSE
 Mezclar;Batidora;TRUE
 Mezclar;Persona;FALSE
 Almacen_masa;Batidora;TRUE
